@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "STWPageViewController"
-  s.version      = "0.1.0"
+  s.version      = "0.1.1"
   s.summary      = "STWPageViewController allow to create a controllers container (UIPageViewController) quickly and easily, it is managed by a customizable toolbar. "
   s.description  = <<-DESC
 STWPageViewController allow to create a controllers container (UIPageViewController) quickly and easily, it is managed by a customizable toolbar. STWPageViewcontroller can be loaded either alone or in a UINavigationController, the toolbar will automatically adapt to display needs.
