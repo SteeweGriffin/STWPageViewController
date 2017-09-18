@@ -1,20 +1,20 @@
 Pod::Spec.new do |s|
 
-  s.name         = "PageController"
-  s.version      = "0.5.0"
-  s.summary      = "Infinite paging controller, scrolling through contents and title bar scrolls with a delay for iOS written in Swift."
+  s.name         = "STWPageViewController"
+  s.version      = "0.1.0"
+  s.summary      = "STWPageViewController allow to create a controllers container (UIPageViewController) quickly and easily, it is managed by a customizable toolbar. "
   s.description  = <<-DESC
-PageController is infinite paging controller, scrolling through contents and title bar scrolls with a delay. Then it provide user interaction to smoothly and effortlessly moving. It is for iOS written in Swift.
+STWPageViewController allow to create a controllers container (UIPageViewController) quickly and easily, it is managed by a customizable toolbar. STWPageViewcontroller can be loaded either alone or in a UINavigationController, the toolbar will automatically adapt to display needs.
                    DESC
 
-  s.homepage     = "https://github.com/hirohisa/PageController"
+  s.homepage     = "https://github.com/SteeweGriffin/STWPageViewController"
   s.license      = { :type => "MIT", :file => "LICENSE" }
 
-  s.author       = { "Hirohisa Kawasaki" => "hirohisa.kawasaki@gmail.com" }
+  s.author       = { "Raffaele Cerullo" => "me@steewe.com" }
 
-  s.source       = { :git => "https://github.com/hirohisa/PageController.git", :tag => s.version }
+  s.source       = { :git => "https://github.com/SteeweGriffin/STWPageViewController.git", :tag => s.version }
 
-  s.source_files = "PageController/*.swift"
+  s.source_files = "STWPageViewController/*.swift"
   s.requires_arc = true
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
 end
