@@ -21,46 +21,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         //-----------------------------------------------
         // DIRECT INIT
-        
+
         let firstController = SubViewController(title: "First", color: .orange)
         let secondController = SubViewController(title: "Second", color: .blue)
         let thirdController = SubViewController(title: "Third", color: .purple)
         let fourthController = SubViewController(title: "Fourth", color: .cyan)
-        
+
         let pages = [firstController, secondController, thirdController, fourthController]
-         
+
         let pageController = ViewController(pages: pages)
-         
+
         self.window?.rootViewController = pageController
         //-----------------------------------------------
         
 //        //-----------------------------------------------
 //        // DIRECT INIT IN NAVIGATION
-//        
+//
 //        let firstController = SubViewController(title: "First", color: .orange)
 //        let secondController = SubViewController(title: "Second", color: .blue)
 //        let thirdController = SubViewController(title: "Third", color: .purple)
 //        let fourthController = SubViewController(title: "Fourth", color: .cyan)
 //         
 //        let pages = [firstController, secondController, thirdController, fourthController]
-//         
+//
 //        let pageController = ViewController(pages: pages)
 //        let navigationController = UINavigationController(rootViewController: pageController)
 //         
 //        self.window?.rootViewController = navigationController
-//        //-----------------------------------------------   
+//        //-----------------------------------------------
         
 //        //-----------------------------------------------
 //        // SET PAGES AFTER INIT
-//        
+//
 //        let firstController = SubViewController()
 //        let secondController = SubViewController()
 //        let thirdController = SubViewController()
 //        let fourthController = SubViewController()
-//        
+//
 //        //###############################################
 //        // AUTO CREATE STWPageViewControllerToolBarItem
-//        
+//
 //        firstController.title = "First"
 //        firstController.view.backgroundColor = .orange
 //        secondController.title = "Second"
@@ -70,10 +70,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        fourthController.title = "Fourth"
 //        fourthController.view.backgroundColor = .cyan
 //        //###############################################
-//        
+//
 ////        //###############################################
 ////        // CUSTOM STWPageViewControllerToolBarItem BY STRING TITLE
-////        
+////
 ////        firstController.pageViewControllerToolBarItem = STWPageViewControllerToolBarItem(title: "!First", normalColor: .orange, selectedColor: .red)
 ////        firstController.view.backgroundColor = .orange
 ////        secondController.pageViewControllerToolBarItem = STWPageViewControllerToolBarItem(title: "*Second", normalColor: .orange, selectedColor: .red)
@@ -83,10 +83,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 ////        fourthController.pageViewControllerToolBarItem = STWPageViewControllerToolBarItem(title: "°Fourth", normalColor: .orange, selectedColor: .red)
 ////        fourthController.view.backgroundColor = .cyan
 ////        //###############################################
-//        
+//
 ////        //###############################################
 ////        // CUSTOM STWPageViewControllerToolBarItem BY ICON
-////        
+////
 ////        firstController.pageViewControllerToolBarItem = STWPageViewControllerToolBarItem(image: #imageLiteral(resourceName: "icon1Default"), selectedImage: #imageLiteral(resourceName: "icon1Active"))
 ////        firstController.view.backgroundColor = .orange
 ////        secondController.pageViewControllerToolBarItem = STWPageViewControllerToolBarItem(image: #imageLiteral(resourceName: "icon2Default"), selectedImage: #imageLiteral(resourceName: "icon2Active"))
@@ -95,12 +95,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 ////        thirdController.view.backgroundColor = .purple
 ////        fourthController.pageViewControllerToolBarItem = STWPageViewControllerToolBarItem(image: #imageLiteral(resourceName: "icon4Default"), selectedImage: #imageLiteral(resourceName: "icon4Active"))
 ////        fourthController.view.backgroundColor = .cyan
-////        //###############################################        
-//        
+////        //###############################################
+//
 //        let pages = [firstController, secondController, thirdController, fourthController]
 //        let pageController = ViewController(pages: pages)
 //        pageController.setPages(pages: pages)
-//        
+//
 //        self.window?.rootViewController = pageController
 //        //-----------------------------------------------
         

@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class STWPageViewControllerToolBar: UIToolbar {
+open class STWPageViewControllerToolBar: UIView {
 
     open var toolBarItems = [STWPageViewControllerToolBarItem]() {
         didSet { self.createItems() }
@@ -26,19 +26,36 @@ open class STWPageViewControllerToolBar: UIToolbar {
         didSet { self.updateApparence() }
     }
     
-    private var stackView = UIStackView()
-    private var indicatorBar = UIView()
+    open var isTranslucent:Bool = true {
+        didSet{
+            self.toolBar.isTranslucent = self.isTranslucent
+            self.updateApparence()
+        }
+    }
     
-    private var barWidthConstraint:NSLayoutConstraint?
-    private var barLeftConstraint:NSLayoutConstraint?
-    private var barHeightConstraint:NSLayoutConstraint?
+    open var barStyle:UIBarStyle = .default {
+        didSet{ self.toolBar.barStyle = self.barStyle }
+    }
     
-    private var stackViewTopConstraint:NSLayoutConstraint?
+    open var barTintColor:UIColor? {
+        didSet{ self.toolBar.barTintColor = self.barTintColor }
+    }
     
+    fileprivate var stackView = UIStackView()
+    fileprivate var toolBar = UIToolbar()
+    fileprivate var indicatorBar = UIView()
+    
+    fileprivate var barWidthConstraint:NSLayoutConstraint?
+    fileprivate var barLeftConstraint:NSLayoutConstraint?
+    fileprivate var barHeightConstraint:NSLayoutConstraint?
+    
+    fileprivate var stackViewTopConstraint:NSLayoutConstraint?
+    
+    /*
     override open var isTranslucent: Bool {
         didSet { self.updateApparence() }
     }
-    
+    */
     weak var pageDelegate:STWPageViewControllerToolBarDelegate?
     
     override init(frame: CGRect) {
@@ -52,9 +69,14 @@ open class STWPageViewControllerToolBar: UIToolbar {
         self.indicatorBar.translatesAutoresizingMaskIntoConstraints = false
         self.indicatorBar.backgroundColor = self.indicatorBarTintColor
         
+        self.toolBar.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(self.toolBar)
         self.addSubview(self.stackView)
         self.addSubview(self.indicatorBar)
         
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[toolBar]|", options: [], metrics: nil, views: ["toolBar":self.toolBar]))
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[toolBar]|", options: [], metrics: nil, views: ["toolBar":self.toolBar]))
     
         self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[stackView]|", options: [], metrics: nil, views: ["stackView":self.stackView]))
         self.stackViewTopConstraint =  NSLayoutConstraint(item: self.stackView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0)
@@ -123,7 +145,7 @@ open class STWPageViewControllerToolBar: UIToolbar {
     }
     
     internal func itemDidPress(_ sender:STWPageViewControllerToolBarItem) {
-        
+        print("item PRESS")
         if let index = self.toolBarItems.index(of: sender) {
             self.pageDelegate?.gotoPage(index, animated: true)
             self.pageDelegate?.updateConstraints()
@@ -133,5 +155,24 @@ open class STWPageViewControllerToolBar: UIToolbar {
             })
         }
     }
+}
+
+extension STWPageViewControllerToolBar {
     
+    open func setBackgroundImage(_ backgroundImage: UIImage?, forToolbarPosition topOrBottom: UIBarPosition, barMetrics: UIBarMetrics) {
+        self.toolBar.setBackgroundImage(backgroundImage, forToolbarPosition: topOrBottom, barMetrics: barMetrics)
+    }
+
+    open func backgroundImage(forToolbarPosition topOrBottom: UIBarPosition, barMetrics: UIBarMetrics) -> UIImage? {
+        return self.toolBar.backgroundImage(forToolbarPosition:topOrBottom, barMetrics:barMetrics)
+    }
+    
+    open func setShadowImage(_ shadowImage: UIImage?, forToolbarPosition topOrBottom: UIBarPosition) {
+        self.toolBar.setShadowImage(shadowImage, forToolbarPosition: topOrBottom)
+    }
+
+    open func shadowImage(forToolbarPosition topOrBottom: UIBarPosition) -> UIImage? {
+        return self.toolBar.shadowImage(forToolbarPosition:topOrBottom)
+    }
+
 }

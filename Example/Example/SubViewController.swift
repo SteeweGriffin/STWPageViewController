@@ -37,16 +37,15 @@ class SubViewController: UIViewController {
         
         super.viewDidLoad()
         
-        
         self.label.translatesAutoresizingMaskIntoConstraints = false
         self.label.textColor = .white
         self.label.textAlignment = .center
-        self.view.addSubview(label)
+        self.view.addSubview(self.label)
         
         
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[label]|", options: [], metrics: nil, views: ["label":label]))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|->=0-[label]->=0-|", options: [], metrics: nil, views: ["label":label]))
-        self.view.addConstraint(NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.label, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1, constant: 0))
     }
 
     override func didReceiveMemoryWarning() {

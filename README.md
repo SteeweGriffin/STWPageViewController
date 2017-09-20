@@ -8,7 +8,7 @@
 [![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat
 )](http://mit-license.org)
 
-STWPageViewController allow to create a controllers container (UIPageViewController) quickly and easily, it is managed by a customizable toolbar. STWPageViewcontroller can be loaded either alone or in a UINavigationController, the toolbar will automatically adapt to display needs.
+STWPageViewController allow to create a controllers container (UIPageViewController) quickly and easily, it is managed by a customizable toolbar. STWPageViewController can be loaded either alone or in a UINavigationController, the toolbar will automatically adapt to display needs.
 
 <kbd>
 ![Demo](screenshots/case1.gif) ![Demo](screenshots/case2.gif) ![Demo](screenshots/case3.gif) ![Demo](screenshots/case4.gif)
@@ -190,4 +190,4 @@ This pod requires a deployment target of iOS 9.0 or greater
 
 ## License
 
-STWCollectionView is available under the MIT license. See the LICENSE file for more info.
+STWPageViewController is available under the MIT license. See the LICENSE file for more info.

@@ -22,6 +22,7 @@ class ViewController: STWPageViewController, STWPageViewControllerDelegate {
 //        self.toolBar.indicatorBarTintColor = .cyan
 //        self.toolBar.isTranslucent = false
 //        self.toolBar.barTintColor = .yellow
+//        self.toolBar.barStyle = .blackTranslucent
         
         self.title = "STWPageViewController"
         self.delegate = self
