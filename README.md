@@ -11,7 +11,7 @@
 STWPageViewController allow to create a controllers container (UIPageViewController) quickly and easily, it is managed by a customizable toolbar. STWPageViewController can be loaded either alone or in a UINavigationController, the toolbar will automatically adapt to display needs.
 
 <kbd>
-![Image](screenshots/case1.gif) ![Image](screenshots/case2.gif) ![Image](screenshots/case3.gif) ![Image](screenshots/case4.gif)
+![Demo](screenshots/case1.gif) ![Demo](screenshots/case2.gif) ![Demo](screenshots/case3.gif) ![Demo](screenshots/case4.gif)
 </kbd>
 
 ## Installation
