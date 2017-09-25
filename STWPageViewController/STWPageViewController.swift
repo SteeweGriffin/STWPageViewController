@@ -40,7 +40,7 @@ open class STWPageViewController: UIViewController {
     
     open var visibleViewController:UIViewController? {
         get {
-            if self.pages.count >= self.currentPage { return nil }
+            if self.currentPage >= self.pages.count { return nil }
             return self.pages[self.currentPage]
         }
     }
@@ -94,6 +94,7 @@ open class STWPageViewController: UIViewController {
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.isInsideNavigationController = (self.navigationController != nil)
+        self.toolBar.layoutSubviews()
     }
     
     deinit {

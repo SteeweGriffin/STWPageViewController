@@ -51,11 +51,6 @@ open class STWPageViewControllerToolBar: UIView {
     
     fileprivate var stackViewTopConstraint:NSLayoutConstraint?
     
-    /*
-    override open var isTranslucent: Bool {
-        didSet { self.updateApparence() }
-    }
-    */
     weak var pageDelegate:STWPageViewControllerToolBarDelegate?
     
     override init(frame: CGRect) {
@@ -125,7 +120,10 @@ open class STWPageViewControllerToolBar: UIView {
         self.pageDelegate?.updateConstraints()
         self.barHeightConstraint?.constant = self.indicatorBarHeight
         self.indicatorBar.backgroundColor = self.indicatorBarTintColor
-        self.updateStatus(percentage: 1 / CGFloat(self.toolBarItems.count) * CGFloat(self.pageDelegate!.startPage), page: self.pageDelegate!.startPage)
+        
+        guard let startPage = self.pageDelegate?.startPage else {return}
+        
+        self.updateStatus(percentage: 1 / CGFloat(self.toolBarItems.count) * CGFloat(startPage), page: startPage)
     }
     
     
@@ -145,7 +143,6 @@ open class STWPageViewControllerToolBar: UIView {
     }
     
     internal func itemDidPress(_ sender:STWPageViewControllerToolBarItem) {
-        print("item PRESS")
         if let index = self.toolBarItems.index(of: sender) {
             self.pageDelegate?.gotoPage(index, animated: true)
             self.pageDelegate?.updateConstraints()
