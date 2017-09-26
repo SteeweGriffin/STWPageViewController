@@ -9,11 +9,16 @@
 import Foundation
 import UIKit
 
+//MARK: UIViewController extension
+
 public extension UIViewController {
     
     private struct AssociatedKeys {
         static var displayed = "STWToolBarItem"
     }
+    
+    /// The Item that represents the view controller when added to a STWPageViewController
+    /// - automatically created with the view controller's title if it's not set explicitly
     
     public var pageViewControllerToolBarItem:STWPageViewControllerToolBarItem! {
         get {
@@ -28,5 +33,4 @@ public extension UIViewController {
             objc_setAssociatedObject(self,&AssociatedKeys.displayed, value, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    
 }

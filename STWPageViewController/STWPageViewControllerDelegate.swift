@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+//MARK: - STWPageViewControllerDelegate
+
 public protocol STWPageViewControllerDelegate:class {
 
     func pageControllerDidPresentPage(viewController:UIViewController, pageIndex:Int)

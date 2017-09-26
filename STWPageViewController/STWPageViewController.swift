@@ -8,35 +8,54 @@
 
 import UIKit
 
+//MARK: - ToolBarDelegate
+
 internal protocol STWPageViewControllerToolBarDelegate:class {
+    
+    //MARK: - Methods
     
     func gotoPage(_ index:Int?, animated:Bool)
     func updateConstraints()
+    
+    //MARK: - Properties
+    
     var startPage:Int {get}
     var isInsideNavigationController:Bool {get}
 }
 
 open class STWPageViewController: UIViewController {
 
+    //MARK: Public private set properties
+    
+    /// Get the current visible page index
+    
     open var currentIndexPage:Int {
         get { return self.currentPage }
     }
     
-    open var toolBarHeight: CGFloat = 44 {
-        didSet {
-            self.toolBarHeight = (self.isInsideNavigationController) ? self.toolBarHeight : self.toolBarHeight + UIApplication.shared.statusBarFrame.height
-            self.updateConstraints()
-        }
-    }
+    /// Get toolBar istance contains Items menu
+    /// - Use this object for customize the apparance
     
-    open private(set) var toolBar = STWPageViewControllerToolBar()
+    open private(set) var toolBar:STWPageViewControllerToolBar?
+    
+    /// Get the view controllers currently on the stack
+    
     open private(set) lazy var pages = [UIViewController]()
+
+    /// Get first page index to presented
+    /// - default: 0
+    
     open private(set) var startPage: Int = 0
+    
+    /// Get if is loaded inside a UINavigationController
+    
     open private(set) var isInsideNavigationController:Bool = false {
         didSet {
             self.updateConstraints()
         }
     }
+    
+    /// Get The view controller currently visible
     
     open var visibleViewController:UIViewController? {
         get {
@@ -45,9 +64,26 @@ open class STWPageViewController: UIViewController {
         }
     }
     
+    //MARK: Custom setting
+    
+    /// Defines the Items menu bar height
+    /// - defalt: 44
+    
+    open var toolBarHeight: CGFloat = 44 {
+        didSet {
+            self.toolBarHeight = (self.isInsideNavigationController) ? self.toolBarHeight : self.toolBarHeight + UIApplication.shared.statusBarFrame.height
+            self.updateConstraints()
+        }
+    }
+    
+    /// Enables horizontal scrolling for switch between the pages
+    /// - default: true
+    
     open var isPageControllerScrollingEnabled:Bool = true {
         didSet { self.pageController.dataSource = (self.isPageControllerScrollingEnabled) ? self : nil }
     }
+    
+    //MARK: - Private properties
     
     fileprivate let pageController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     fileprivate var nextPage = 0
@@ -65,11 +101,24 @@ open class STWPageViewController: UIViewController {
         return self.isLimitLeft || self.isLimitRight
     }
     
+    //MARK: - Constraints
+    
     internal var topToolBarConstraint:NSLayoutConstraint?
     internal var topPageConstraint:NSLayoutConstraint?
     internal var heightToolBarConstraint:NSLayoutConstraint?
     
     open weak var delegate:STWPageViewControllerDelegate?
+    
+    //MARK: Initalize
+    
+    /**
+     
+     Initialize with array of view controllers and page index to begin
+     
+     - parameter pages: Specify what is the view controllers stack
+     - parameter startPage: Specify what is the first page index to present
+     
+     */
     
     public init(pages:[UIViewController], startPage:Int? = 0) {
         self.init()
@@ -94,7 +143,7 @@ open class STWPageViewController: UIViewController {
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.isInsideNavigationController = (self.navigationController != nil)
-        self.toolBar.layoutSubviews()
+        self.toolBar?.layoutSubviews()
     }
     
     deinit {
@@ -117,18 +166,53 @@ open class STWPageViewController: UIViewController {
         
         self.pages = pages
         self.startPage = startPage
-        self.toolBar.pageDelegate = self
-        self.toolBar.toolBarItems = self.pages.map( { $0.pageViewControllerToolBarItem } )
+        self.toolBar = STWPageViewControllerToolBar(items: self.pages.map( { $0.pageViewControllerToolBarItem } ))
+        self.toolBar?.pageDelegate = self
+        //self.toolBar.toolBarItems = self.pages.map( { $0.pageViewControllerToolBarItem } )
         self.currentPage = self.startPage
         self.nextPage = self.startPage
         self.createUI()
     }
     
+    //MARK: Public methods
+    
+    /**
+     
+     Specifies or Updates what is the view controllers stack
+     
+     - parameter pages: Specify what is the view controllers stack
+     - parameter startPage: Specify what is the first page index to present
+
+     */
+    
     open func setPages(pages:[UIViewController], startPage:Int? = 0){
         self.initialize(pages: pages, startPage:startPage!)
     }
     
+    /**
+     
+     Scrolls to page...
+     
+     - parameter indexPage: Specify what is the page index that you want to visualize
+     - parameter animated: Specify if the scrolling is animated
+     
+     */
+    
+    open func scrollToPage(_ indexPage:Int, animated:Bool){
+        guard indexPage < self.pages.count else { return }
+        self.gotoPage(indexPage, animated: animated)
+        self.toolBar?.scrollToPage(indexPage, animated: animated)
+    }
+    
+    //MARK: - Private methods
+    
     private func createUI() {
+        
+        // Clean
+        self.pageController.removeFromParentViewController()
+        self.pageController.view.removeFromSuperview()
+        self.pageController.willMove(toParentViewController: self)
+        self.toolBar?.removeFromSuperview()
         
         assert(self.view.backgroundColor != nil, "view.backgroundColor must be setted")
         assert(self.view.backgroundColor != .clear, "view.backgroundColor not must be clear")
@@ -146,21 +230,21 @@ open class STWPageViewController: UIViewController {
         let scrollView = self.pageController.view.subviews.filter { $0 is UIScrollView }.first as! UIScrollView
         scrollView.delegate = self
         
-        self.toolBar.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(self.toolBar)
+        self.toolBar?.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.toolBar!)
         
         self.setConstraints()
     }
     
     private func setConstraints(){
         
-        self.view.addConstraint(NSLayoutConstraint(item: self.toolBar, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.toolBar, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1, constant: 0))
-        self.heightToolBarConstraint = NSLayoutConstraint(item: self.toolBar, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.toolBarHeight)
+        self.view.addConstraint(NSLayoutConstraint(item: self.toolBar!, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.toolBar!, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1, constant: 0))
+        self.heightToolBarConstraint = NSLayoutConstraint(item: self.toolBar!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.toolBarHeight)
         
         self.view.addConstraint(self.heightToolBarConstraint!)
         
-        self.topToolBarConstraint = NSLayoutConstraint(item: self.toolBar, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 0)
+        self.topToolBarConstraint = NSLayoutConstraint(item: self.toolBar!, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 0)
         
         self.view.addConstraint(self.topToolBarConstraint!)
         
@@ -178,8 +262,10 @@ open class STWPageViewController: UIViewController {
     
 }
 
+//MARK: - ToolBarDelegate extension
+
 extension STWPageViewController: STWPageViewControllerToolBarDelegate {
-    
+
     func gotoPage(_ index:Int?, animated:Bool){
         
         self.isEnableScrollObserver = false
@@ -209,7 +295,7 @@ extension STWPageViewController: STWPageViewControllerToolBarDelegate {
     func updateConstraints() {
         DispatchQueue.main.async {
             var offsetToolBarTranslucent:CGFloat = 0.0
-            var offsetPageTranslucent:CGFloat = (self.toolBar.isTranslucent) ? -0.3 : self.toolBarHeight
+            var offsetPageTranslucent:CGFloat = (self.toolBar!.isTranslucent) ? -0.3 : self.toolBarHeight
             
             if self.isInsideNavigationController {
                 if self.navigationController!.navigationBar.isTranslucent {
@@ -227,6 +313,8 @@ extension STWPageViewController: STWPageViewControllerToolBarDelegate {
     
 }
 
+//MARK: - UIScrollViewDelegate extension
+
 extension STWPageViewController: UIScrollViewDelegate {
     
     private typealias ToolBarScrollPercentage = (percentage:CGFloat, page:Int)
@@ -237,7 +325,7 @@ extension STWPageViewController: UIScrollViewDelegate {
             
             let resultForToolBar:ToolBarScrollPercentage = self.findPercentageToolBarForPage(xPos: scrollView.contentOffset.x, widthScreen: self.view.frame.size.width)
             DispatchQueue.main.async {
-                self.toolBar.updateStatus(percentage: resultForToolBar.percentage, page: resultForToolBar.page)
+                self.toolBar?.updateStatus(percentage: resultForToolBar.percentage, page: resultForToolBar.page)
             }
 
         }
@@ -300,6 +388,7 @@ extension STWPageViewController: UIScrollViewDelegate {
     }
 }
 
+//MARK: - UIPageViewController and UIPageViewControllerDataSource extension
 
 extension STWPageViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
     

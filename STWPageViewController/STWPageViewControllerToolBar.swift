@@ -10,21 +10,31 @@ import UIKit
 
 open class STWPageViewControllerToolBar: UIView {
 
-    open var toolBarItems = [STWPageViewControllerToolBarItem]() {
-        didSet { self.createItems() }
-    }
+    //MARK: Custom setting
+    
+    /// Defines the indicator bar offset
+    /// - default: 0
     
     open var indicatorBarPadding:CGFloat = 0 {
         didSet { self.updateApparence() }
     }
     
+    /// Defines the indicator bar height
+    /// - default: 4
+    
     open var indicatorBarHeight:CGFloat = 4 {
         didSet { self.updateApparence() }
     }
     
+    /// Defines the indicator bar color
+    /// - default: .black
+    
     open var indicatorBarTintColor:UIColor = .black {
         didSet { self.updateApparence() }
     }
+    
+    /// Defines if the bar is translucent
+    /// - default: true
     
     open var isTranslucent:Bool = true {
         didSet{
@@ -33,13 +43,26 @@ open class STWPageViewControllerToolBar: UIView {
         }
     }
     
+    /// Defines bar style
+    /// - default: UIBarStyleDefault
+    
     open var barStyle:UIBarStyle = .default {
         didSet{ self.toolBar.barStyle = self.barStyle }
     }
     
+    /// Defines bar tint color
+    
     open var barTintColor:UIColor? {
         didSet{ self.toolBar.barTintColor = self.barTintColor }
     }
+    
+    //MARK: Public private set
+    
+    /// Get the items currently on the stack
+    
+    open private(set) var toolBarItems = [STWPageViewControllerToolBarItem]()
+    
+    //MARK: - Private properties
     
     fileprivate var stackView = UIStackView()
     fileprivate var toolBar = UIToolbar()
@@ -51,7 +74,19 @@ open class STWPageViewControllerToolBar: UIView {
     
     fileprivate var stackViewTopConstraint:NSLayoutConstraint?
     
-    weak var pageDelegate:STWPageViewControllerToolBarDelegate?
+    //MARK: - Delegate
+    
+    weak var pageDelegate:STWPageViewControllerToolBarDelegate? {
+        didSet { self.updateApparence() }
+    }
+    
+    //MARK: Initialize
+    
+    convenience init(items:[STWPageViewControllerToolBarItem]) {
+        self.init(frame: CGRect.zero)
+        self.toolBarItems = items
+        self.createItems()
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -92,6 +127,8 @@ open class STWPageViewControllerToolBar: UIView {
         super.init(coder: aDecoder)
     }
     
+    //MARK: Public methods
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -103,6 +140,52 @@ open class STWPageViewControllerToolBar: UIView {
 
     }
     
+    /**
+     
+     Update:
+     
+         • indicator bar size and position
+         • items status
+     
+     depending of page and its visible percentage
+     
+     - parameter percentage: Specify page visible percentage
+     - parameter page: Specify which page will be displayed
+     
+     */
+    
+    open func updateStatus(percentage:CGFloat, page:Int) {
+        let widthView = (self.frame.size.width <= 0) ? UIScreen.main.bounds.size.width : self.frame.size.width
+        var widthBar = (widthView / CGFloat(self.toolBarItems.count)) - (self.indicatorBarPadding * 2)
+        if widthBar < 0 { widthBar = 0 }
+        let leftBar = (widthView * percentage) + self.indicatorBarPadding
+        
+        
+        self.barWidthConstraint?.constant = widthBar
+        self.barLeftConstraint?.constant = leftBar
+        
+        self.toolBarItems.forEach( { $0.isEnabled = true })
+        self.toolBarItems.filter( { self.toolBarItems.index(of: $0) == page } ).first?.isEnabled = false
+        self.layoutIfNeeded()
+    }
+    
+    /**
+     
+     Scroll at page animated
+     
+     - parameter page: Specify which page will be displayed
+     - parameter animated: Specify if the scrolling is animated
+     
+     */
+    
+    open func scrollToPage(_ page:Int, animated:Bool){
+        DispatchQueue.main.async {
+            self.animateStatus(percentage: 1 / CGFloat(self.toolBarItems.count) * CGFloat(page), page: page, animated: animated)
+        }
+    }
+    
+    //MARK: - Private methods
+    
     private func createItems(){
         
         self.stackView.subviews.forEach( { $0.removeFromSuperview() } )
@@ -113,7 +196,9 @@ open class STWPageViewControllerToolBar: UIView {
             self.stackView.addArrangedSubview(item)
         }
         
-        self.updateStatus(percentage: 1 / CGFloat(self.toolBarItems.count) * CGFloat(self.pageDelegate!.startPage), page: self.pageDelegate!.startPage)
+        var startPage = 0
+        if let startPageUnwrap = self.pageDelegate?.startPage { startPage = startPageUnwrap }
+        self.updateStatus(percentage: 1 / CGFloat(self.toolBarItems.count) * CGFloat(startPage), page: startPage)
     }
     
     private func updateApparence(){
@@ -126,33 +211,27 @@ open class STWPageViewControllerToolBar: UIView {
         self.updateStatus(percentage: 1 / CGFloat(self.toolBarItems.count) * CGFloat(startPage), page: startPage)
     }
     
-    
-    open func updateStatus(percentage:CGFloat, page:Int) {
-        let widthView = (self.frame.size.width <= 0) ? UIScreen.main.bounds.size.width : self.frame.size.width
-        var widthBar = (widthView / CGFloat(self.toolBarItems.count)) - (self.indicatorBarPadding * 2)
-        if widthBar < 0 { widthBar = 0 }
-        let leftBar = (widthView * percentage) + self.indicatorBarPadding
-
-        
-        self.barWidthConstraint?.constant = widthBar
-        self.barLeftConstraint?.constant = leftBar
-        
-        self.toolBarItems.forEach( { $0.isEnabled = true })
-        self.toolBarItems.filter( { self.toolBarItems.index(of: $0) == page } ).first?.isEnabled = false
-        self.layoutIfNeeded()
+    private func animateStatus(percentage:CGFloat, page:Int, animated:Bool) {
+        if animated {
+            UIView.setAnimationCurve(.easeInOut)
+            UIView.animate(withDuration: 0.3, animations: {
+                self.updateStatus(percentage: percentage, page: page)
+            })
+        }else{
+            self.updateStatus(percentage: percentage, page: page)
+        }
     }
     
     internal func itemDidPress(_ sender:STWPageViewControllerToolBarItem) {
         if let index = self.toolBarItems.index(of: sender) {
             self.pageDelegate?.gotoPage(index, animated: true)
             self.pageDelegate?.updateConstraints()
-            UIView.setAnimationCurve(.easeInOut)
-            UIView.animate(withDuration: 0.3, animations: {
-                self.updateStatus(percentage: 1 / CGFloat(self.toolBarItems.count) * CGFloat(index), page: index)
-            })
+            self.animateStatus(percentage: 1 / CGFloat(self.toolBarItems.count) * CGFloat(index), page: index, animated: true)
         }
     }
 }
+
+//MARK: - ToolBar extension
 
 extension STWPageViewControllerToolBar {
     

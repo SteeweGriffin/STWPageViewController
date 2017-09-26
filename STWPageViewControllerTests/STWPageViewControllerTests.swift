@@ -116,13 +116,13 @@ class STWPageViewControllerTests: XCTestCase {
         self.pageViewController.view.frame = UIScreen.main.bounds
         self.pageViewController.viewDidLoad()
 
-        self.pageViewController.gotoPage(2, animated: true)
+        self.pageViewController.scrollToPage(2, animated: true)
         XCTAssertEqual(self.pageViewController.currentIndexPage, 2)
         
-        self.pageViewController.gotoPage(0, animated: true)
+        self.pageViewController.scrollToPage(0, animated: true)
         XCTAssertEqual(self.pageViewController.currentIndexPage, 0)
         
-        self.pageViewController.gotoPage(1, animated: true)
+        self.pageViewController.scrollToPage(1, animated: true)
         XCTAssertEqual(self.pageViewController.currentIndexPage, 1)
     }
 }

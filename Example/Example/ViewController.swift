@@ -26,7 +26,6 @@ class ViewController: STWPageViewController, STWPageViewControllerDelegate {
         
         self.title = "STWPageViewController"
         self.delegate = self
-        
     }
 
     override func didReceiveMemoryWarning() {
