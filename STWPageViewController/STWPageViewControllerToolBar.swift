@@ -8,9 +8,15 @@
 
 import UIKit
 
+/**
+ 
+ STWPageViewControllerToolBar is the items menu for STWPageViewController, easy to customize
+ 
+ */
+
 open class STWPageViewControllerToolBar: UIView {
 
-    //MARK: Custom setting
+    //MARK: Custom settings
     
     /// Defines the indicator bar offset
     /// - default: 0
@@ -232,6 +238,7 @@ open class STWPageViewControllerToolBar: UIView {
 }
 
 //MARK: - ToolBar extension
+//MARK: UIToolBar methods
 
 extension STWPageViewControllerToolBar {
     

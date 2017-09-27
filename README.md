@@ -175,10 +175,16 @@ You can customize many aspects of `STWPageViewController` for all your needs
   
 **STWPageViewController public methods**:
 
-* **`gotoPage(_ index:Int?, animated:Bool)`** Scrolls STWPageViewController at specific index.
+* **`setPages(pages:[UIViewController], startPage:Int? = 0)`** Specifies or Updates what is the view controllers stack and what is the first page index to present
 
   ```swift
-  func gotoPage(_ index:Int?, animated:Bool)
+  func setPages(pages:[UIViewController], startPage:Int? = 0)
+  ```
+
+* **`scrollToPage(_ indexPage:Int?, animated:Bool)`** Scrolls STWPageViewController at specific index.
+
+  ```swift
+  func scrollToPage(_ indexPage:Int?, animated:Bool)
   ```
   
 ## Requirements

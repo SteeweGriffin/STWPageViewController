@@ -8,6 +8,12 @@
 
 import UIKit
 
+/**
+ 
+ STWPageViewControllerToolBarItem is the item for STWPageViewControllerToolBar, you can initialize it with title or image and its status details
+ 
+ */
+
 public class STWPageViewControllerToolBarItem: UIButton {
 
     //MARK: Initialize

@@ -23,6 +23,12 @@ internal protocol STWPageViewControllerToolBarDelegate:class {
     var isInsideNavigationController:Bool {get}
 }
 
+/**
+
+ STWPageViewController allow to create a controllers container (UIPageViewController) quickly and easily, it is managed by a customizable toolbar. STWPageViewController can be loaded either alone or in a UINavigationController, the toolbar will automatically adapt to display needs.
+ 
+ */
+
 open class STWPageViewController: UIViewController {
 
     //MARK: Public private set properties
@@ -64,7 +70,7 @@ open class STWPageViewController: UIViewController {
         }
     }
     
-    //MARK: Custom setting
+    //MARK: Custom settings
     
     /// Defines the Items menu bar height
     /// - defalt: 44
@@ -107,9 +113,11 @@ open class STWPageViewController: UIViewController {
     internal var topPageConstraint:NSLayoutConstraint?
     internal var heightToolBarConstraint:NSLayoutConstraint?
     
+    //MARK: Delegate
+    
     open weak var delegate:STWPageViewControllerDelegate?
     
-    //MARK: Initalize
+    //MARK: Initialize
     
     /**
      
@@ -132,6 +140,8 @@ open class STWPageViewController: UIViewController {
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK: Public methods
     
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -173,8 +183,6 @@ open class STWPageViewController: UIViewController {
         self.nextPage = self.startPage
         self.createUI()
     }
-    
-    //MARK: Public methods
     
     /**
      
@@ -313,7 +321,7 @@ extension STWPageViewController: STWPageViewControllerToolBarDelegate {
     
 }
 
-//MARK: - UIScrollViewDelegate extension
+//MARK: UIScrollViewDelegate methods
 
 extension STWPageViewController: UIScrollViewDelegate {
     
@@ -388,7 +396,7 @@ extension STWPageViewController: UIScrollViewDelegate {
     }
 }
 
-//MARK: - UIPageViewController and UIPageViewControllerDataSource extension
+//MARK: UIPageViewControllerDelegate and UIPageViewControllerDataSource methods
 
 extension STWPageViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
     
